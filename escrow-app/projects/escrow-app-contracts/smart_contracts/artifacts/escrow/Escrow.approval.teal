@@ -1,0 +1,398 @@
+#pragma version 11
+#pragma typetrack false
+
+// @algorandfoundation/algorand-typescript/arc4/index.d.ts::Contract.approvalProgram() -> uint64:
+main:
+    intcblock 0 1
+    bytecblock "status" "buyer" "seller" "amount" "Funded" "Created" "Accepted" "Shipped"
+    // smart_contracts/escrow/contract.algo.ts:11-17
+    // @contract({
+    //   stateTotals: {
+    //     globalUints: 1,
+    //     globalBytes: 3,
+    //   },
+    // })
+    // export class Escrow extends Contract {
+    txn NumAppArgs
+    bz main___algots__.defaultCreate@13
+    txn OnCompletion
+    !
+    assert // OnCompletion must be NoOp
+    txn ApplicationID
+    assert
+    pushbytess 0x372b6244 0x79fffb36 0xead0bf06 0x8e05ed62 0x37c1e36e 0x23e629f7 // method "createOrder(address,uint64)void", method "lockFunds()void", method "acceptOrder()void", method "markShipped()void", method "confirmDelivery()void", method "refund()void"
+    txna ApplicationArgs 0
+    match createOrder lockFunds acceptOrder markShipped confirmDelivery refund
+    err
+
+main___algots__.defaultCreate@13:
+    // smart_contracts/escrow/contract.algo.ts:11-17
+    // @contract({
+    //   stateTotals: {
+    //     globalUints: 1,
+    //     globalBytes: 3,
+    //   },
+    // })
+    // export class Escrow extends Contract {
+    txn OnCompletion
+    !
+    txn ApplicationID
+    !
+    &&
+    assert // OnCompletion must be NoOp && can only call when creating
+    intc_1 // 1
+    return
+
+
+// smart_contracts/escrow/contract.algo.ts::Escrow.createOrder[routing]() -> void:
+createOrder:
+    // smart_contracts/escrow/contract.algo.ts:23
+    // createOrder(seller: Account, amount: uint64): void {
+    txna ApplicationArgs 1
+    dup
+    len
+    pushint 32 // 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    txna ApplicationArgs 2
+    dup
+    len
+    pushint 8 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    btoi
+    // smart_contracts/escrow/contract.algo.ts:18
+    // buyer = GlobalState<Account>()
+    bytec_1 // "buyer"
+    // smart_contracts/escrow/contract.algo.ts:24
+    // this.buyer.value = Txn.sender
+    txn Sender
+    app_global_put
+    // smart_contracts/escrow/contract.algo.ts:19
+    // seller = GlobalState<Account>()
+    bytec_2 // "seller"
+    // smart_contracts/escrow/contract.algo.ts:25
+    // this.seller.value = seller
+    uncover 2
+    app_global_put
+    // smart_contracts/escrow/contract.algo.ts:20
+    // amount = GlobalState<uint64>()
+    bytec_3 // "amount"
+    // smart_contracts/escrow/contract.algo.ts:26
+    // this.amount.value = amount
+    swap
+    app_global_put
+    // smart_contracts/escrow/contract.algo.ts:21
+    // status = GlobalState<string>()
+    bytec_0 // "status"
+    // smart_contracts/escrow/contract.algo.ts:27
+    // this.status.value = 'Created'
+    bytec 5 // "Created"
+    app_global_put
+    // smart_contracts/escrow/contract.algo.ts:23
+    // createOrder(seller: Account, amount: uint64): void {
+    intc_1 // 1
+    return
+
+
+// smart_contracts/escrow/contract.algo.ts::Escrow.lockFunds[routing]() -> void:
+lockFunds:
+    // smart_contracts/escrow/contract.algo.ts:31
+    // assert(Txn.sender === this.buyer.value)
+    txn Sender
+    intc_0 // 0
+    // smart_contracts/escrow/contract.algo.ts:18
+    // buyer = GlobalState<Account>()
+    bytec_1 // "buyer"
+    // smart_contracts/escrow/contract.algo.ts:31
+    // assert(Txn.sender === this.buyer.value)
+    app_global_get_ex
+    assert // check GlobalState exists
+    ==
+    assert
+    // smart_contracts/escrow/contract.algo.ts:32
+    // assert(this.status.value === 'Created')
+    intc_0 // 0
+    // smart_contracts/escrow/contract.algo.ts:21
+    // status = GlobalState<string>()
+    bytec_0 // "status"
+    // smart_contracts/escrow/contract.algo.ts:32
+    // assert(this.status.value === 'Created')
+    app_global_get_ex
+    assert // check GlobalState exists
+    bytec 5 // "Created"
+    ==
+    assert
+    // smart_contracts/escrow/contract.algo.ts:21
+    // status = GlobalState<string>()
+    bytec_0 // "status"
+    // smart_contracts/escrow/contract.algo.ts:33
+    // this.status.value = 'Funded'
+    bytec 4 // "Funded"
+    app_global_put
+    // smart_contracts/escrow/contract.algo.ts:30
+    // lockFunds(): void {
+    intc_1 // 1
+    return
+
+
+// smart_contracts/escrow/contract.algo.ts::Escrow.acceptOrder[routing]() -> void:
+acceptOrder:
+    // smart_contracts/escrow/contract.algo.ts:37
+    // assert(Txn.sender === this.seller.value)
+    txn Sender
+    intc_0 // 0
+    // smart_contracts/escrow/contract.algo.ts:19
+    // seller = GlobalState<Account>()
+    bytec_2 // "seller"
+    // smart_contracts/escrow/contract.algo.ts:37
+    // assert(Txn.sender === this.seller.value)
+    app_global_get_ex
+    assert // check GlobalState exists
+    ==
+    assert
+    // smart_contracts/escrow/contract.algo.ts:38
+    // assert(this.status.value === 'Funded')
+    intc_0 // 0
+    // smart_contracts/escrow/contract.algo.ts:21
+    // status = GlobalState<string>()
+    bytec_0 // "status"
+    // smart_contracts/escrow/contract.algo.ts:38
+    // assert(this.status.value === 'Funded')
+    app_global_get_ex
+    assert // check GlobalState exists
+    bytec 4 // "Funded"
+    ==
+    assert
+    // smart_contracts/escrow/contract.algo.ts:21
+    // status = GlobalState<string>()
+    bytec_0 // "status"
+    // smart_contracts/escrow/contract.algo.ts:39
+    // this.status.value = 'Accepted'
+    bytec 6 // "Accepted"
+    app_global_put
+    // smart_contracts/escrow/contract.algo.ts:36
+    // acceptOrder(): void {
+    intc_1 // 1
+    return
+
+
+// smart_contracts/escrow/contract.algo.ts::Escrow.markShipped[routing]() -> void:
+markShipped:
+    // smart_contracts/escrow/contract.algo.ts:43
+    // assert(Txn.sender === this.seller.value)
+    txn Sender
+    intc_0 // 0
+    // smart_contracts/escrow/contract.algo.ts:19
+    // seller = GlobalState<Account>()
+    bytec_2 // "seller"
+    // smart_contracts/escrow/contract.algo.ts:43
+    // assert(Txn.sender === this.seller.value)
+    app_global_get_ex
+    assert // check GlobalState exists
+    ==
+    assert
+    // smart_contracts/escrow/contract.algo.ts:44
+    // assert(this.status.value === 'Accepted')
+    intc_0 // 0
+    // smart_contracts/escrow/contract.algo.ts:21
+    // status = GlobalState<string>()
+    bytec_0 // "status"
+    // smart_contracts/escrow/contract.algo.ts:44
+    // assert(this.status.value === 'Accepted')
+    app_global_get_ex
+    assert // check GlobalState exists
+    bytec 6 // "Accepted"
+    ==
+    assert
+    // smart_contracts/escrow/contract.algo.ts:21
+    // status = GlobalState<string>()
+    bytec_0 // "status"
+    // smart_contracts/escrow/contract.algo.ts:45
+    // this.status.value = 'Shipped'
+    bytec 7 // "Shipped"
+    app_global_put
+    // smart_contracts/escrow/contract.algo.ts:42
+    // markShipped(): void {
+    intc_1 // 1
+    return
+
+
+// smart_contracts/escrow/contract.algo.ts::Escrow.confirmDelivery[routing]() -> void:
+confirmDelivery:
+    // smart_contracts/escrow/contract.algo.ts:49
+    // assert(Txn.sender === this.buyer.value)
+    txn Sender
+    intc_0 // 0
+    // smart_contracts/escrow/contract.algo.ts:18
+    // buyer = GlobalState<Account>()
+    bytec_1 // "buyer"
+    // smart_contracts/escrow/contract.algo.ts:49
+    // assert(Txn.sender === this.buyer.value)
+    app_global_get_ex
+    assert // check GlobalState exists
+    ==
+    assert
+    // smart_contracts/escrow/contract.algo.ts:50
+    // assert(this.status.value === 'Shipped')
+    intc_0 // 0
+    // smart_contracts/escrow/contract.algo.ts:21
+    // status = GlobalState<string>()
+    bytec_0 // "status"
+    // smart_contracts/escrow/contract.algo.ts:50
+    // assert(this.status.value === 'Shipped')
+    app_global_get_ex
+    assert // check GlobalState exists
+    bytec 7 // "Shipped"
+    ==
+    assert
+    // smart_contracts/escrow/contract.algo.ts:52-58
+    // itxn
+    //   .payment({
+    //     receiver: this.seller.value,
+    //     amount: this.amount.value,
+    //     fee: 0,
+    //   })
+    //   .submit()
+    itxn_begin
+    // smart_contracts/escrow/contract.algo.ts:54
+    // receiver: this.seller.value,
+    intc_0 // 0
+    // smart_contracts/escrow/contract.algo.ts:19
+    // seller = GlobalState<Account>()
+    bytec_2 // "seller"
+    // smart_contracts/escrow/contract.algo.ts:54
+    // receiver: this.seller.value,
+    app_global_get_ex
+    assert // check GlobalState exists
+    // smart_contracts/escrow/contract.algo.ts:55
+    // amount: this.amount.value,
+    intc_0 // 0
+    // smart_contracts/escrow/contract.algo.ts:20
+    // amount = GlobalState<uint64>()
+    bytec_3 // "amount"
+    // smart_contracts/escrow/contract.algo.ts:55
+    // amount: this.amount.value,
+    app_global_get_ex
+    assert // check GlobalState exists
+    itxn_field Amount
+    itxn_field Receiver
+    // smart_contracts/escrow/contract.algo.ts:52-57
+    // itxn
+    //   .payment({
+    //     receiver: this.seller.value,
+    //     amount: this.amount.value,
+    //     fee: 0,
+    //   })
+    intc_1 // 1
+    itxn_field TypeEnum
+    // smart_contracts/escrow/contract.algo.ts:56
+    // fee: 0,
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/escrow/contract.algo.ts:52-58
+    // itxn
+    //   .payment({
+    //     receiver: this.seller.value,
+    //     amount: this.amount.value,
+    //     fee: 0,
+    //   })
+    //   .submit()
+    itxn_submit
+    // smart_contracts/escrow/contract.algo.ts:21
+    // status = GlobalState<string>()
+    bytec_0 // "status"
+    // smart_contracts/escrow/contract.algo.ts:60
+    // this.status.value = 'Released'
+    pushbytes "Released"
+    app_global_put
+    // smart_contracts/escrow/contract.algo.ts:48
+    // confirmDelivery(): void {
+    intc_1 // 1
+    return
+
+
+// smart_contracts/escrow/contract.algo.ts::Escrow.refund[routing]() -> void:
+refund:
+    // smart_contracts/escrow/contract.algo.ts:64
+    // assert(Txn.sender === this.buyer.value)
+    txn Sender
+    intc_0 // 0
+    // smart_contracts/escrow/contract.algo.ts:18
+    // buyer = GlobalState<Account>()
+    bytec_1 // "buyer"
+    // smart_contracts/escrow/contract.algo.ts:64
+    // assert(Txn.sender === this.buyer.value)
+    app_global_get_ex
+    assert // check GlobalState exists
+    swap
+    dig 1
+    ==
+    assert
+    // smart_contracts/escrow/contract.algo.ts:65
+    // assert(this.status.value === 'Funded')
+    intc_0 // 0
+    // smart_contracts/escrow/contract.algo.ts:21
+    // status = GlobalState<string>()
+    bytec_0 // "status"
+    // smart_contracts/escrow/contract.algo.ts:65
+    // assert(this.status.value === 'Funded')
+    app_global_get_ex
+    assert // check GlobalState exists
+    bytec 4 // "Funded"
+    ==
+    assert
+    // smart_contracts/escrow/contract.algo.ts:67-73
+    // itxn
+    //   .payment({
+    //     receiver: this.buyer.value,
+    //     amount: this.amount.value,
+    //     fee: 0,
+    //   })
+    //   .submit()
+    itxn_begin
+    // smart_contracts/escrow/contract.algo.ts:70
+    // amount: this.amount.value,
+    intc_0 // 0
+    // smart_contracts/escrow/contract.algo.ts:20
+    // amount = GlobalState<uint64>()
+    bytec_3 // "amount"
+    // smart_contracts/escrow/contract.algo.ts:70
+    // amount: this.amount.value,
+    app_global_get_ex
+    assert // check GlobalState exists
+    itxn_field Amount
+    itxn_field Receiver
+    // smart_contracts/escrow/contract.algo.ts:67-72
+    // itxn
+    //   .payment({
+    //     receiver: this.buyer.value,
+    //     amount: this.amount.value,
+    //     fee: 0,
+    //   })
+    intc_1 // 1
+    itxn_field TypeEnum
+    // smart_contracts/escrow/contract.algo.ts:71
+    // fee: 0,
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/escrow/contract.algo.ts:67-73
+    // itxn
+    //   .payment({
+    //     receiver: this.buyer.value,
+    //     amount: this.amount.value,
+    //     fee: 0,
+    //   })
+    //   .submit()
+    itxn_submit
+    // smart_contracts/escrow/contract.algo.ts:21
+    // status = GlobalState<string>()
+    bytec_0 // "status"
+    // smart_contracts/escrow/contract.algo.ts:75
+    // this.status.value = 'Refunded'
+    pushbytes "Refunded"
+    app_global_put
+    // smart_contracts/escrow/contract.algo.ts:63
+    // refund(): void {
+    intc_1 // 1
+    return
